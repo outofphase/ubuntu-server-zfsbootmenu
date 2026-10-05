@@ -30,22 +30,22 @@ set -euo pipefail
 
 ##Variables:
 ubuntuver="resolute" #Ubuntu release to install. "noble" (24.04). resolute (26.04).
-distro_variant="server" #Ubuntu variant to install. "server" (Ubuntu server; cli only.) "desktop" (Default Ubuntu desktop install). "kubuntu" (KDE plasma desktop variant). "xubuntu" (Xfce desktop variant). "budgie" (Budgie desktop variant). "MATE" (MATE desktop variant).
-user="testuser" #Username for new install.
-PASSWORD="testuser" #Password for user in new install.
-hostname="ubuntu" #Name to identify the main system on the network. An underscore is DNS non-compliant.
-zfs_root_password="testtest" #Password for encrypted root pool. Minimum 8 characters. "" for no password encrypted protection. Unlocking root pool also unlocks data pool, unless the root pool has no password protection, then a separate data pool password can be set below.
+distro_variant="desktop" #Ubuntu variant to install. "server" (Ubuntu server; cli only.) "desktop" (Default Ubuntu desktop install). "kubuntu" (KDE plasma desktop variant). "xubuntu" (Xfce desktop variant). "budgie" (Budgie desktop variant). "MATE" (MATE desktop variant).
+user="david" #Username for new install.
+PASSWORD="<secret>" #Password for user in new install.
+hostname="alpe" #Name to identify the main system on the network. An underscore is DNS non-compliant.
+zfs_root_password="<secret>" #Password for encrypted root pool. Minimum 8 characters. "" for no password encrypted protection. Unlocking root pool also unlocks data pool, unless the root pool has no password protection, then a separate data pool password can be set below.
 zfs_root_encrypt="native" #Encryption type. "native" for native zfs encryption. "luks" for luks. Required if there is a root pool password, otherwise ignored.
 locale="en_GB.UTF-8" #New install language setting.
 timezone="Europe/London" #New install timezone setting.
 zfs_rpool_ashift="12" #Drive setting for zfs pool. ashift=9 means 512B sectors (used by all ancient drives), ashift=12 means 4KiB sectors (used by most modern hard drives), and ashift=13 means 8KiB sectors (used by some modern SSDs).
-mirror_archive="" #"" to use the default ubuntu repository. Set to an ISO 3166-1 alpha-2 country code to use a country mirror archive, e.g. "GB". A speed test is run and the fastest archive is selected. Country codes: https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
+mirror_archive="GB" #"" to use the default ubuntu repository. Set to an ISO 3166-1 alpha-2 country code to use a country mirror archive, e.g. "GB". A speed test is run and the fastest archive is selected. Country codes: https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
 
-RPOOL="rpool" #Root pool name.
+RPOOL="rpool_alpe" #Root pool name.
 topology_root="single" #"single", "mirror", "raid0", "raidz1", "raidz2", or "raidz3" topology on root pool.
 disks_root="1" #Number of disks in array for root pool. Not used with single topology.
 EFI_boot_size="512" #EFI boot loader partition size in mebibytes (MiB).
-swap_size="500" #Swap partition size in mebibytes (MiB). Size of swap will be larger than defined here with Raidz topologies.
+swap_size="8G" #Swap partition size in mebibytes (MiB). Size of swap will be larger than defined here with Raidz topologies.
 datapool="datapool" #Non-root drive data pool name.
 topology_data="single" #"single", "mirror", "raid0", "raidz1", "raidz2", or "raidz3" topology on data pool.
 # shellcheck disable=SC2034 #disks_data used indirectly via eval in topology_min_disk_check()
@@ -54,17 +54,17 @@ zfs_data_password="testtest" #If no root pool password is set, a data pool passw
 zfs_data_encrypt="native" #Encryption type. "native" for native zfs encryption. "luks" for luks. Required if there is a data pool password, otherwise ignored.
 datapoolmount="/mnt/$datapool" #Non-root drive data pool mount point in new install.
 zfs_dpool_ashift="12" #See notes for rpool ashift. If ashift is set too low, a significant read/write penalty is incurred. Virtually no penalty if set higher.
-zfs_compression="zstd" #"lz4" is the zfs default; "zstd" may offer better compression at a cost of higher cpu usage.
+zfs_compression="lz4" #"lz4" is the zfs default; "zstd" may offer better compression at a cost of higher cpu usage.
 mountpoint="/mnt/ub_server" #Mountpoint in live iso.
-timeout_rEFInd="3" #Timeout in seconds for rEFInd boot screen until default choice selected.
-timeout_zbm_no_remote_access="3" #Timeout in seconds for zfsbootmenu when no remote access enabled.
+timeout_rEFInd="5" #Timeout in seconds for rEFInd boot screen until default choice selected.
+timeout_zbm_no_remote_access="5" #Timeout in seconds for zfsbootmenu when no remote access enabled.
 timeout_zbm_remote_access="45" #Timeout in seconds for zfsbootmenu when remote access enabled. The password prompt for an encrypted root pool with allow an indefinite time to connect. An unencrypted root pool will boot the system when the timer runs out, preventing remote access.
 quiet_boot="yes" #Set to "no" to show boot sequence.
 ethprefix="e" #First letter of ethernet interface. Used to identify ethernet interface to setup networking in new install.
 install_log="ubuntu_setup_zfs_root.log" #Installation log filename.
 log_loc="/var/log" #Installation log location.
 ipv6_apt_fix_live_iso="no" #Try setting to "yes" gif apt-get is slow in the ubuntu live iso. Doesn't affect ipv6 functionality in the new install.
-remoteaccess_hostname="zbm" #Name to identify the zfsbootmenu system on the network.
+remoteaccess_hostname="zbm-alpe" #Name to identify the zfsbootmenu system on the network.
 remoteaccess_ip_config="dhcp" #"dhcp", "dhcp,dhcp6", "dhcp6", or "static". Automatic (dhcp) or static IP assignment for zfsbootmenu remote access.
 remoteaccess_ip="192.168.0.222" #Remote access static IP address to connect to ZFSBootMenu. Not used for automatic IP configuration.
 remoteaccess_netmask="255.255.255.0" #Remote access subnet mask. Not used for "dhcp" automatic IP configuration.
