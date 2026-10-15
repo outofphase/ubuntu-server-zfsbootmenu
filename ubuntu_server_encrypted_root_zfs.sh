@@ -3,6 +3,8 @@
 ##Script: https://github.com/Sithuk/ubuntu-server-zfsbootmenu
 ##Script date: 2026-06-24
 
+##This version contains default values for the `alpe` desktop.
+
 # shellcheck disable=SC2317  # Don't warn about unreachable commands in this file
 
 set -euo pipefail
@@ -42,14 +44,14 @@ zfs_rpool_ashift="12" #Drive setting for zfs pool. ashift=9 means 512B sectors (
 mirror_archive="GB" #"" to use the default ubuntu repository. Set to an ISO 3166-1 alpha-2 country code to use a country mirror archive, e.g. "GB". A speed test is run and the fastest archive is selected. Country codes: https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
 
 RPOOL="rpool_alpe" #Root pool name.
-topology_root="single" #"single", "mirror", "raid0", "raidz1", "raidz2", or "raidz3" topology on root pool.
-disks_root="1" #Number of disks in array for root pool. Not used with single topology.
+topology_root="mirror" #"single", "mirror", "raid0", "raidz1", "raidz2", or "raidz3" topology on root pool.
+disks_root="2" #Number of disks in array for root pool. Not used with single topology.
 EFI_boot_size="512" #EFI boot loader partition size in mebibytes (MiB).
-swap_size="8G" #Swap partition size in mebibytes (MiB). Size of swap will be larger than defined here with Raidz topologies.
+swap_size="16G" #Swap partition size in mebibytes (MiB). Size of swap will be larger than defined here with Raidz topologies.
 datapool="datapool" #Non-root drive data pool name.
-topology_data="single" #"single", "mirror", "raid0", "raidz1", "raidz2", or "raidz3" topology on data pool.
+topology_data="mirror" #"single", "mirror", "raid0", "raidz1", "raidz2", or "raidz3" topology on data pool.
 # shellcheck disable=SC2034 #disks_data used indirectly via eval in topology_min_disk_check()
-disks_data="1" #Number of disks in array for data pool. Not used with single topology.
+disks_data="2" #Number of disks in array for data pool. Not used with single topology.
 zfs_data_password="testtest" #If no root pool password is set, a data pool password can be set here. Minimum 8 characters. "" for no password protection.
 zfs_data_encrypt="native" #Encryption type. "native" for native zfs encryption. "luks" for luks. Required if there is a data pool password, otherwise ignored.
 datapoolmount="/mnt/$datapool" #Non-root drive data pool mount point in new install.
@@ -59,14 +61,14 @@ mountpoint="/mnt/ub_server" #Mountpoint in live iso.
 timeout_rEFInd="5" #Timeout in seconds for rEFInd boot screen until default choice selected.
 timeout_zbm_no_remote_access="5" #Timeout in seconds for zfsbootmenu when no remote access enabled.
 timeout_zbm_remote_access="45" #Timeout in seconds for zfsbootmenu when remote access enabled. The password prompt for an encrypted root pool with allow an indefinite time to connect. An unencrypted root pool will boot the system when the timer runs out, preventing remote access.
-quiet_boot="yes" #Set to "no" to show boot sequence.
+quiet_boot="no" #Set to "no" to show boot sequence.
 ethprefix="e" #First letter of ethernet interface. Used to identify ethernet interface to setup networking in new install.
 install_log="ubuntu_setup_zfs_root.log" #Installation log filename.
 log_loc="/var/log" #Installation log location.
-ipv6_apt_fix_live_iso="no" #Try setting to "yes" gif apt-get is slow in the ubuntu live iso. Doesn't affect ipv6 functionality in the new install.
+ipv6_apt_fix_live_iso="no" #Try setting to "yes" if apt-get is slow in the ubuntu live iso. Doesn't affect ipv6 functionality in the new install.
 remoteaccess_hostname="zbm-alpe" #Name to identify the zfsbootmenu system on the network.
 remoteaccess_ip_config="dhcp" #"dhcp", "dhcp,dhcp6", "dhcp6", or "static". Automatic (dhcp) or static IP assignment for zfsbootmenu remote access.
-remoteaccess_ip="192.168.0.222" #Remote access static IP address to connect to ZFSBootMenu. Not used for automatic IP configuration.
+remoteaccess_ip="192.168.0.25" #Remote access static IP address to connect to ZFSBootMenu. Not used for automatic IP configuration.
 remoteaccess_netmask="255.255.255.0" #Remote access subnet mask. Not used for "dhcp" automatic IP configuration.
 ubuntu_original="http://archive.ubuntu.com/ubuntu" #Default ubuntu repository.
 install_warning_level="PRIORITY=critical" #"PRIORITY=critical", or "FRONTEND=noninteractive". Pause install to show critical messages only or do not pause (noninteractive). Script still pauses for keyboard selection.
