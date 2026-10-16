@@ -1806,7 +1806,7 @@ distroinstall(){
 		desktop)
 			##Ubuntu default desktop install has a full GUI environment.
 			##Minimal install: ubuntu-desktop-minimal
-			apt install --yes ubuntu-desktop
+			apt install --yes ubuntu-desktop-minimal
 		;;
 		kubuntu)
 			##Ubuntu KDE plasma desktop install has a full GUI environment.
