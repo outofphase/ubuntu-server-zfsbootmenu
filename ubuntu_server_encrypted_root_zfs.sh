@@ -4,6 +4,7 @@
 ##Script date: 2026-06-24
 
 ##This version contains default values for the `alpe` desktop.
+##Note that passwords need to be set on the cloned worktree before running it.
 
 # shellcheck disable=SC2317  # Don't warn about unreachable commands in this file
 
