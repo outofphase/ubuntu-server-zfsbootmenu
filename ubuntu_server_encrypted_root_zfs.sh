@@ -1591,6 +1591,7 @@ systemsetupFunc_part5(){
 
 			##Set MDADM level and number of disks.
 			mdadm --create /dev/md0 --metadata=1.2 \\
+			--homehost="$hostname" \\
 			--level="$mdadm_level" \\
 			--raid-devices="$mdadm_devices" \\
 			--bitmap=none \\
