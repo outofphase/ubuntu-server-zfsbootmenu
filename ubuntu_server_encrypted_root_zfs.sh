@@ -48,7 +48,7 @@ RPOOL="rpool_alpe" #Root pool name.
 topology_root="mirror" #"single", "mirror", "raid0", "raidz1", "raidz2", or "raidz3" topology on root pool.
 disks_root="2" #Number of disks in array for root pool. Not used with single topology.
 EFI_boot_size="512" #EFI boot loader partition size in mebibytes (MiB).
-swap_size="32G" #Swap partition size in mebibytes (MiB). Size of swap will be larger than defined here with Raidz topologies.
+swap_size="32G" #Swap partition size (with size unit e.g. "M" or "G").
 datapool="datapool" #Non-root drive data pool name.
 topology_data="mirror" #"single", "mirror", "raid0", "raidz1", "raidz2", or "raidz3" topology on data pool.
 # shellcheck disable=SC2034 #disks_data used indirectly via eval in topology_min_disk_check()
@@ -947,7 +947,7 @@ debootstrap_part1_Func(){
 			##https://github.com/zfsonlinux/zfs/issues/7734
 			##hibernate needs swap at least same size as RAM
 			##hibernate only works with unencrypted installs
-			sgdisk -n2:0:+"${swap_size}"M -t2:"${swap_hex_code}" /dev/disk/by-id/"${diskidnum}"
+			sgdisk -n2:0:+"${swap_size}" -t2:"${swap_hex_code}" /dev/disk/by-id/"${diskidnum}"
 		
 			##2.6 Create root pool partition
 			sgdisk     -n3:0:0      -t3:"${root_hex_code}" /dev/disk/by-id/"${diskidnum}"
