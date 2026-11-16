@@ -63,7 +63,9 @@ timeout_rEFInd="5" #Timeout in seconds for rEFInd boot screen until default choi
 timeout_zbm_no_remote_access="5" #Timeout in seconds for zfsbootmenu when no remote access enabled.
 timeout_zbm_remote_access="45" #Timeout in seconds for zfsbootmenu when remote access enabled. The password prompt for an encrypted root pool with allow an indefinite time to connect. An unencrypted root pool will boot the system when the timer runs out, preventing remote access.
 quiet_boot="no" #Set to "no" to show boot sequence.
-ethprefix="e" #First letter of ethernet interface. Used to identify ethernet interface to setup networking in new install.
+ethprefix="w" #First letter of ethernet interface. Used to identify ethernet interface to setup networking in new install.
+wifi_ssid="Newlyn"
+wifi_password="t_x-i&P35V4uAAK@"
 install_log="ubuntu_setup_zfs_root.log" #Installation log filename.
 log_loc="/var/log" #Installation log location.
 ipv6_apt_fix_live_iso="no" #Try setting to "yes" if apt-get is slow in the ubuntu live iso. Doesn't affect ipv6 functionality in the new install.
@@ -1272,9 +1274,12 @@ systemsetupFunc_part1(){
 	cat > "$mountpoint"/etc/netplan/01-"$ethernetinterface".yaml <<-EOF
 		network:
 		  version: 2
-		  ethernets:
+		  wifis:
 		    $ethernetinterface:
 		      dhcp4: yes
+		       access-points:
+		"$wifi_ssid":
+		password: "$wifi_password"
 	EOF
 	##https://netplan.readthedocs.io/en/stable/reference/
 	chmod 600 "$mountpoint"/etc/netplan/01-"$ethernetinterface".yaml
@@ -1317,6 +1322,8 @@ systemsetupFunc_part2(){
 		apt install --yes --no-install-recommends dkms wget nano
 		
 		apt install -yq software-properties-common
+
+		apt install --no-install-recommends -y linux-firmware wpasupplicant wireless-tools
 		
 		##Ubuntu kernels come with zfs module installed. No need to install zfs-dkms for zfs version in the default repositories.
 		#apt-get -yq install zfs-dkms
